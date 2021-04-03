@@ -1,18 +1,53 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 
-import { AppRoutingModule } from './app-routing.module';
+import { AppRoutingModule, routingComponents } from './app-routing.module';
 import { AppComponent } from './app.component';
+import { HeaderComponent } from '../app/components/header/header.component'
+import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import { HttpClientModule } from '@angular/common/http';
+import {NoteService} from 'src/app/service/note/note.service';
+//import { MatDialogModule } from "@angular/material";
+import { ReactiveFormsModule, FormsModule } from '@angular/forms';
+import {MatDialogModule, MatDialogRef} from '@angular/material/dialog';
+
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { CommonModule } from '@angular/common';
+
+
+
 
 @NgModule({
   declarations: [
-    AppComponent
+    AppComponent,
+    routingComponents,
+    HeaderComponent
   ],
   imports: [
     BrowserModule,
-    AppRoutingModule
+    AppRoutingModule,
+   CommonModule,
+    NgbModule,
+    HttpClientModule,
+    MatDialogModule,
+    FormsModule,
+    ReactiveFormsModule,
+  
+  
+    MatFormFieldModule,
+    MatInputModule,  
+    BrowserAnimationsModule,
+    //RouterModule.forRoot()
   ],
-  providers: [],
+  providers: [
+    {
+      provide: MatDialogRef,
+      useValue: {}
+    },
+    NoteService
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
