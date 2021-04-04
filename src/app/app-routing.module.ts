@@ -8,8 +8,7 @@ const routes: Routes = [
   { path: '', redirectTo: 'home', pathMatch: 'full' },
   { path: 'user', component: UsersComponent },
   { path: 'home', component: NotesComponent },
-  
-  { path: 'm', component: FormUserComponent },
+  { path: '', component: FormUserComponent },
 ];
 
 @NgModule({
@@ -17,4 +16,4 @@ const routes: Routes = [
   exports: [RouterModule]
 })
 export class AppRoutingModule { }
-export const routingComponents = [UsersComponent,NotesComponent, FormUserComponent,]
+export const routingComponents = [UsersComponent, NotesComponent, FormUserComponent,]

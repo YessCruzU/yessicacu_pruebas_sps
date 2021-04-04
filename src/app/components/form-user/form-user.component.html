@@ -1,24 +1,51 @@
 <div>
+  <div class="text-right">
+
+  
+  <button type="button" class="btn btn-xs btn-danger" mat-dialog-close><span class="material-icons">
+    close
+    </span></button></div>
+  
   <form [formGroup]="noteForm" (ngSubmit)="onSubmit() ">
     <div class="form-group">
       <label for="title">Title</label>
-      <input type="text" id="title" class="form-control" formControlName="title" required minlength="4" >
+      <label for="title">{{data.name}}</label>
+      <!--input type="text" id="title" [(ngModel)]="note.title"  #name="ngModel" class="form-control" formControlName="title" required minlength="4" -->
+      <input id="title" class="form-control"
+      formControlName="title" required >
     </div>
-    <div class="form-group">
-      <label for="author">Author</label>
-      <select class="form-control" id="author" formControlName="author">
-        <option *ngFor="let user of lstUsers; " [value]="user.name">
+    <div *ngIf="noteForm.controls['title'].invalid && (noteForm.controls['title'].dirty || noteForm.controls['title'].touched)"
+    class="alert alert-danger">
+    <p>Title is required</p>
+     
+  </div>
+  
+    <div class="form-group" >
+      <label for="author">Author </label><br>
+    
+     
+      <select class="form-control" id="author" formControlName="author" [attr.disabled]="!editable ? '' : null" *ngIf="!data._id " >
+        <option *ngFor="let user of lstUsers; " [value]="user.name" >
           {{user.name}}
         </option>
-      </select>
+      </select> <label for="author" *ngIf="data.author != ''">{{data.author}}</label>
     </div>
+    <div *ngIf="noteForm.controls['author'].invalid && (noteForm.controls['author'].dirty || noteForm.controls['author'].touched)"
+    class="alert alert-danger">
+    <p>Name is required</p>
+  </div>
     <div class="form-group">
       <label for="information">Information</label>
       <textarea class="form-control" formControlName="information" rows="3"></textarea>
     </div>
-    <div class="text-center">
-      <button type="submit" class="btn btn-yellow m w-50">Save</button>
+    <div *ngIf="noteForm.controls['information'].invalid && (noteForm.controls['information'].dirty || noteForm.controls['information'].touched)"
+    class="alert alert-danger">
+    <p>Information is required</p>
+  </div>
+
+    <div class="text-center"  >
+      
+      <button type="submit"  [disabled]="noteForm.status  === 'INVALID'" class="btn btn-yellow m w-50">Save</button>     
     </div>
   </form>
 </div>
-<div class="shadow-sm">Small shadow</div>

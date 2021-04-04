@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
-import {UserService} from 'src/app/service/user/user.service'
+import { UserService } from 'src/app/service/user/user.service'
 import { User } from 'src/app/model/user.model'
+import { FormBuilder, FormGroup, Validators, FormControl } from '@angular/forms';
 
 @Component({
   selector: 'app-users',
@@ -9,42 +10,43 @@ import { User } from 'src/app/model/user.model'
 })
 export class UsersComponent implements OnInit {
   lstUsers: User[];
-  nameUser: String;
+  userForm: FormGroup;
   constructor(
-   private userService: UserService
+    private userService: UserService,
+    private formBuilder: FormBuilder
   ) {
     this.lstUsers = new Array<User>();
-    this.nameUser="";
+    this.userForm = this.formBuilder.group({});
   }
-  ngOnInit() {
 
+  ngOnInit() {
     this.doGet();
+    this.form();
   }
-  doGet(){
+
+  form() {
+    this.userForm = new FormGroup({
+      user: new FormControl('', Validators.required)
+    });
+  }
+
+  doGet() {
     this.userService.getUser().subscribe(
       res => {
-        this.lstUsers = res;  
-        this.userService.lstUsers = this.lstUsers;
-        console.log(this.lstUsers);
-        console.log(this.userService.lstUsers);
-              
+        this.lstUsers = res;
+        this.userService.lstUsers = this.lstUsers;        
       },
-      err =>console.log(err)
+      err => console.log(err)
     );
   }
 
-  doInsert(user: String){
-    
-
-    this.userService.insertUser(user).subscribe(
-      res => {       
-        console.log(res);    
-        this.ngOnInit();          
+  onSubmit() {
+    this.userService.insertUser(this.userForm.value.user).subscribe(
+      res => {    
+        this.ngOnInit();
       },
-      err =>console.log(err)
+      err => console.log(err)
     );
   }
-
- 
 
 }

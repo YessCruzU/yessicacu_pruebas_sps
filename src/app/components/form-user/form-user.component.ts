@@ -1,11 +1,12 @@
-import { Component, OnInit } from '@angular/core';
-import {MatDialog, MatDialogRef, MAT_DIALOG_DATA} from '@angular/material/dialog';
-import {UserService} from 'src/app/service/user/user.service'
-import {NoteService} from 'src/app/service/note/note.service'
+import { Component, OnInit, Inject } from '@angular/core';
+import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { UserService } from 'src/app/service/user/user.service'
+import { NoteService } from 'src/app/service/note/note.service'
 import { User } from 'src/app/model/user.model'
 import { Note } from 'src/app/model/note.model'
-import { FormBuilder, FormGroup,Validators,FormControl } from "@angular/forms";
+import { FormBuilder, FormGroup, Validators, FormControl } from "@angular/forms";
 import { of } from "rxjs";
+
 
 
 @Component({
@@ -14,73 +15,52 @@ import { of } from "rxjs";
   styleUrls: ['./form-user.component.scss']
 })
 export class FormUserComponent implements OnInit {
-  lstUsers : User[]; 
+  lstUsers: User[];
   noteForm: FormGroup;
-  
- 
-  
+  note: Note = {}
+  editable: boolean = false;
+
   constructor(public dialog: MatDialog,
     public dialogRef: MatDialogRef<FormUserComponent>,
-     private userService:UserService,
-     private noteService:NoteService,
-     private formBuilder: FormBuilder) {
-      this.lstUsers = new Array<User>();  
-      
-       this.noteForm = new FormGroup({
-        title: new FormControl(''),
-        author: new FormControl(''),
-        information: new FormControl('')
-     });
-    
-      }
-
-/* noteForm = this.formBuilder.group({   
-    title: ['', Validators.required],
-    author: '',
-    information:''
-  });*/
+    @Inject(MAT_DIALOG_DATA) public data: any,
+    private userService: UserService,
+    private noteService: NoteService,
+    private formBuilder: FormBuilder) {
+    this.noteForm = this.formBuilder.group({});
+    this.lstUsers = new Array<User>();
+    this.note = data;
+    dialogRef.disableClose = true;
+  }
 
   ngOnInit() {
-    this.doGetUser()
-   
-    
+    this.doGetLstUser();
+    this.initForm();
   }
 
-  onSubmit(){
-
-    console.log(this.noteForm.valid);
-    // Process checkout data here
-    //this.items = this.cartService.clearCart();
-    console.warn('note', this.noteForm.value);
-    this.noteService.insertNote(this.noteForm.value).subscribe(
-      res => {       
-        console.log(res); 
-        this.noteForm.reset();  
-        this.closeDialog();
-                  
-      },
-      err =>console.log(err)
-    );
-    
-
-    //this.checkoutForm.reset();
+  initForm() {
+    this.noteForm = new FormGroup({
+      _id: new FormControl(this.note._id ? this.note._id : ''),
+      title: new FormControl(this.note.title, Validators.required),
+      author: new FormControl(this.note.author, Validators.required),
+      information: new FormControl(this.note.information, Validators.required)
+    });
   }
 
- 
-
-
-
-  closeDialog() {
-    this.dialogRef.close();
+  onSubmit() {
+    this.dialogRef.close(this.noteForm.value);
   }
 
-  doGetUser(){
-   this.userService.getUser().subscribe(
+  close() {
+    this.dialogRef.close()
+  }
+
+  doGetLstUser() {
+    this.userService.getUser().subscribe(
       res => {
-        this.lstUsers = res;        
-        console.log( this.lstUsers);              
+        this.lstUsers = res;
+        if (this.lstUsers.length != 0) this.editable = true;
       },
-      err =>console.log(err)
+      err => console.log(err)
     );
   }
 
