@@ -16,7 +16,7 @@ import { map } from 'rxjs/operators';
   providedIn: 'root'
 })
 export class NoteService {
-  private _URL = "/servicio/api-notes-app"
+  private _URL = "http://ec2-100-24-7-12.compute-1.amazonaws.com:8080/servicio/api-notes-app"
   constructor(
     private http: HttpClient,
   ) { }
@@ -66,9 +66,11 @@ export class NoteService {
         author: note.author
       }
     }
-    return this.http.post(this._URL + "/update-note", json_object, {})
+    return this.http.put(this._URL + "/update-note", json_object, {})
       .pipe(
         map(results => {
+          console.log('res',results);
+          
           return results;
         })
       );

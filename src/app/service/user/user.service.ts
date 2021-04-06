@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { User } from '../../model/user.model'
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+
+import { HttpClient, HttpHeaders,  } from '@angular/common/http';
 import { Observable, BehaviorSubject } from 'rxjs';
 import { map } from 'rxjs/operators';
 
@@ -9,7 +10,8 @@ import { map } from 'rxjs/operators';
 })
 export class UserService {
   lstUsers: User[];
-  private URL = "/servicio/api-notes-app"
+  private URL = "http://ec2-100-24-7-12.compute-1.amazonaws.com:8080/servicio/api-notes-app"
+ 
 
   constructor(
     private http: HttpClient,
@@ -19,6 +21,7 @@ export class UserService {
   }
 
   public getUser(): Observable<any> {
+
     return this.http.get(this.URL + "/users")
       .pipe(
         map(results => {
